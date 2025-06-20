@@ -1,9 +1,9 @@
 import json
+import os
 from datetime import datetime
 
 def kontrol_et():
     now = datetime.now().isoformat()
-    # Örnek dummy veri
     return {
         "timestamp": now,
         "location": "Bayonne",
@@ -12,18 +12,25 @@ def kontrol_et():
     }
 
 def log_yaz(data):
-    try:
-        with open("log.json", "r") as f:
-            logs = json.load(f)
-    except Exception:
+    log_file = "log.json"
+    
+    # Eğer dosya yoksa boş bir listeyle başla
+    if not os.path.exists(log_file):
         logs = []
-    
+    else:
+        try:
+            with open(log_file, "r") as f:
+                logs = json.load(f)
+        except:
+            logs = []
+
     logs.append(data)
-    
-    with open("log.json", "w") as f:
+
+    with open(log_file, "w") as f:
         json.dump(logs, f, indent=2)
 
 if __name__ == "__main__":
-    print("Bot çalışıyor...")  # loglarda görmek için
+    print("Bot başladı...")
     sonuc = kontrol_et()
     log_yaz(sonuc)
+    print("Log kaydedildi.")
